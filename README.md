@@ -19,3 +19,5 @@
     **req** : body에 `channelTitle`, `sub`, `videoNum` 초기화후 신규 뉴튜버 정보를 전달 및 db에 저장
     
     **res** : `channelTitle님, 뉴튜버가 되신 걸 환영합니다.`
+
+[API 테스트](https://github.com/startartart/RepoTest/pull/4)

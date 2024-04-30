@@ -1,12 +1,15 @@
+const {
+  HELLO_WORLD_TOAST,
+  NOT_FOUND_TOAST,
+  EMPTY_NEWTUBER_TOAST,
+  SIGN_UP_TOAST,
+  DELETE_NEWTUBER_TOAST,
+  DELETE_ALL_NEWTUBER_TOAST,
+  CHANGE_NETUBE_CHANNEL_TOAST,
+} = require('./constants');
 const express = require('express');
 const app = express();
 const port = 3001;
-
-app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Hello, World');
-});
 
 const newtuber1 = {
   channelTitle: 'newTuber1',
@@ -33,6 +36,11 @@ db.set(idx++, newtuber1);
 db.set(idx++, newtuber2);
 db.set(idx++, newtuber3);
 
+app.use(express.json());
+app.get('/', (req, res) => {
+  res.send(HELLO_WORLD_TOAST);
+});
+
 app.get('/newtuber/:id', (req, res) => {
   let { id } = req.params;
   id = parseInt(id);
@@ -40,7 +48,7 @@ app.get('/newtuber/:id', (req, res) => {
   const newtuber = db.get(id);
   if (newtuber == undefined)
     res.json({
-      message: '뉴튜버 정보를 찾을 수 없습니다.',
+      message: NOT_FOUND_TOAST,
     });
   else res.json(newtuber);
 });
@@ -53,7 +61,7 @@ app.post('/newtuber', (req, res) => {
   db.set(idx++, req.body);
 
   res.json({
-    message: `${db.get(idx - 1).channelTitle}님은 ${idx}번째 뉴튜버입니다.`,
+    message: SIGN_UP_TOAST(db.get(idx - 1).channelTitle, idx),
   });
 });
 
@@ -65,13 +73,12 @@ app.delete('/newtubers/:id', (req, res) => {
 
   if (newtuber == undefined)
     res.json({
-      message: '뉴튜버 정보를 찾을 수 없습니다.',
+      message: NOT_FOUND_TOAST,
     });
   else {
-    const channelTitle = newtuber.channelTitle;
     db.delete(id);
     res.json({
-      message: `${channelTitle}의 뉴튜브 채널이 삭제되었습니다.`,
+      message: DELETE_NEWTUBER_TOAST(newtuber.channelTitle),
     });
   }
 });
@@ -79,12 +86,33 @@ app.delete('/newtubers/:id', (req, res) => {
 app.delete('/newtubers', (req, res) => {
   if (db.size < 1) {
     res.json({
-      message: '등록된 뉴튜버가 없습니다.',
+      message: EMPTY_NEWTUBER_TOAST,
     });
   } else {
     db.clear();
     res.json({
-      message: '모든 뉴튜버가 삭제되었습니다.',
+      message: DELETE_ALL_NEWTUBER_TOAST,
+    });
+  }
+});
+
+app.put('/newtubers/:id', (req, res) => {
+  let { id } = req.params;
+  id = parseInt(id);
+
+  const newtuber = db.get(id);
+
+  if (newtuber == undefined)
+    res.json({
+      message: NOT_FOUND_TOAST,
+    });
+  else {
+    const preTitle = newtuber.channelTitle;
+    const changeTitle = req.body.channelTitle;
+    newtuber.channelTitle = changeTitle;
+
+    res.json({
+      message: CHANGE_NETUBE_CHANNEL_TOAST(preTitle, changeTitle),
     });
   }
 });

@@ -76,6 +76,19 @@ app.delete('/newtubers/:id', (req, res) => {
   }
 });
 
+app.delete('/newtubers', (req, res) => {
+  if (db.size < 1) {
+    res.json({
+      message: '등록된 뉴튜버가 없습니다.',
+    });
+  } else {
+    db.clear();
+    res.json({
+      message: '모든 뉴튜버가 삭제되었습니다.',
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);
 });

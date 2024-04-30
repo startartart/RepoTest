@@ -20,4 +20,6 @@
     
     **res** : `channelTitle님, 뉴튜버가 되신 걸 환영합니다.`
 
-[API 테스트](https://github.com/startartart/RepoTest/pull/4)
+[API 테스트 및 GET, POST](https://github.com/startartart/RepoTest/pull/4)
+[DELETE API](https://github.com/startartart/RepoTest/pull/5)
+[PUT API](https://github.com/startartart/RepoTest/pull/6)

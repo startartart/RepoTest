@@ -57,6 +57,25 @@ app.post('/newtuber', (req, res) => {
   });
 });
 
+app.delete('/newtubers/:id', (req, res) => {
+  let { id } = req.params;
+  id = parseInt(id);
+
+  const newtuber = db.get(id);
+
+  if (newtuber == undefined)
+    res.json({
+      message: '뉴튜버 정보를 찾을 수 없습니다.',
+    });
+  else {
+    const channelTitle = newtuber.channelTitle;
+    db.delete(id);
+    res.json({
+      message: `${channelTitle}의 뉴튜브 채널이 삭제되었습니다.`,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);
 });

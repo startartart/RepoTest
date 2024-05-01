@@ -1,4 +1,10 @@
-### 뉴튜브 API 설계하기
+### 뉴튜브 실전 프로젝트 `'./project-newtube'`
+
+- [회원 API 설계](https://github.com/startartart/RepoTest/pull/8)
+
+
+---
+### 뉴튜브 API 설계하기 연습 `'./project-demo-example'`
 
 - **`GET`** `/newtuber/:id`  id로 객체를 찾아 객체의 정보를 전달
     

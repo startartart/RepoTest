@@ -21,7 +21,19 @@ app.post('/join', (req, res) => {
   }
 });
 
-app.get('/user/:id', (req, res) => {});
+app.get('/user/:id', (req, res) => {
+  const user = userDB.get(parseInt(req.params.id));
+  if (user === undefined) {
+    res.status(404).json({
+      message: '존재하지 않는 회원입니다.',
+    });
+  } else {
+    res.status(200).json({
+      userId: user.userId,
+      name: user.name,
+    });
+  }
+});
 
 app.delete('/user/:id', (req, res) => {});
 

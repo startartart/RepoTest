@@ -6,6 +6,7 @@ const {
   DELETE_NEWTUBER_TOAST,
   DELETE_ALL_NEWTUBER_TOAST,
   CHANGE_NETUBE_CHANNEL_TOAST,
+  NOT_REQUEST_VALUE_TOAST,
 } = require('./constants');
 const express = require('express');
 const app = express();
@@ -47,22 +48,30 @@ app.get('/newtuber/:id', (req, res) => {
 
   const newtuber = db.get(id);
   if (newtuber == undefined)
-    res.json({
+    res.status(404).json({
       message: NOT_FOUND_TOAST,
     });
   else res.json(newtuber);
 });
 
 app.get('/newtubers', (req, res) => {
-  res.json(Object.fromEntries(db));
+  if (db.size < 1) res.status(404).json({ message: EMPTY_NEWTUBER_TOAST });
+  else res.json(Object.fromEntries(db));
 });
 
-app.post('/newtuber', (req, res) => {
-  db.set(idx++, req.body);
+app.post('/newtubers', (req, res) => {
+  const channelTitle = req.body.channelTitle;
+  if (channelTitle) {
+    db.set(idx++, req.body);
 
-  res.json({
-    message: SIGN_UP_TOAST(db.get(idx - 1).channelTitle, idx),
-  });
+    res.status(201).json({
+      message: SIGN_UP_TOAST(db.get(idx - 1).channelTitle, idx),
+    });
+  } else {
+    res.status(400).json({
+      message: NOT_REQUEST_VALUE_TOAST,
+    });
+  }
 });
 
 app.delete('/newtubers/:id', (req, res) => {
@@ -72,7 +81,7 @@ app.delete('/newtubers/:id', (req, res) => {
   const newtuber = db.get(id);
 
   if (newtuber == undefined)
-    res.json({
+    res.status(404).json({
       message: NOT_FOUND_TOAST,
     });
   else {
@@ -85,7 +94,7 @@ app.delete('/newtubers/:id', (req, res) => {
 
 app.delete('/newtubers', (req, res) => {
   if (db.size < 1) {
-    res.json({
+    res.status(404).json({
       message: EMPTY_NEWTUBER_TOAST,
     });
   } else {
@@ -103,7 +112,7 @@ app.put('/newtubers/:id', (req, res) => {
   const newtuber = db.get(id);
 
   if (newtuber == undefined)
-    res.json({
+    res.status(404).json({
       message: NOT_FOUND_TOAST,
     });
   else {

@@ -21,21 +21,35 @@ app.post('/join', (req, res) => {
   }
 });
 
-app.get('/user/:id', (req, res) => {
-  const user = userDB.get(parseInt(req.params.id));
-  if (user === undefined) {
-    res.status(404).json({
-      message: '존재하지 않는 회원입니다.',
-    });
-  } else {
-    res.status(200).json({
-      userId: user.userId,
-      name: user.name,
-    });
-  }
-});
+app
+  .route('/user/:id')
+  .get((req, res) => {
+    const user = userDB.get(parseInt(req.params.id));
+    if (user === undefined) {
+      res.status(404).json({
+        message: '존재하지 않는 회원입니다.',
+      });
+    } else {
+      res.status(200).json({
+        userId: user.userId,
+        name: user.name,
+      });
+    }
+  })
+  .delete((req, res) => {
+    const user = userDB.get(parseInt(req.params.id));
+    if (user === undefined) {
+      res.status(404).json({
+        message: '존재하지 않는 회원입니다.',
+      });
+    } else {
+      userDB.delete(parseInt(req.params.id));
 
-app.delete('/user/:id', (req, res) => {});
+      res.status(200).json({
+        message: `${user.name}님은 정상적으로 회원탈퇴 하셨습니다.`,
+      });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);

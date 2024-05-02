@@ -8,13 +8,17 @@ let userIdx = 1;
 app.use(express.json());
 app.post('/login', (req, res) => {
   const { userId, pwd } = req.body;
-  const checkUser = {};
+  let checkUser = {};
 
   userDB.forEach((user) => {
-    if (userId === user.userId && pwd === user.pwd) {
-      console.log('check');
-    }
+    if (userId === user.userId) checkUser = user;
   });
+
+  if (Object.keys(checkUser).length)
+    if (pwd === checkUser.pwd)
+      res.json({ message: `${checkUser.name}님, 로그인에 성공하셨습니다.` });
+    else res.status(401).json({ message: '올바르지 않은 비밀번호입니다.' });
+  else res.status(401).json({ message: '존재하지 않는 회원입니다.' });
 });
 
 app.post('/join', (req, res) => {

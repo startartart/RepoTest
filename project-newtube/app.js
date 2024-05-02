@@ -97,7 +97,19 @@ app
     }
   })
   .put((req, res) => {})
-  .delete((req, res) => {});
+  .delete((req, res) => {
+    const channel = channelDB.get(parseInt(req.params.id));
+    if (channel) {
+      channelDB.delete(parseInt(req.params.id));
+      res.status(200).json({
+        message: `정상적으로 ${channel.channelTitle}(이)가 삭제되었습니다.`,
+      });
+    } else {
+      res.status(404).json({
+        message: '존재하지 않는 채널입니다.',
+      });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);

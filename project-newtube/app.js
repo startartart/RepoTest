@@ -68,7 +68,13 @@ app
 
 app
   .route('/channels')
-  .get((req, res) => {})
+  .get((req, res) => {
+    if (channelDB.size) res.status(200).json(Object.fromEntries(channelDB));
+    else
+      res
+        .status(404)
+        .json({ message: '하나 이상의 채널이 있어야 조회가 가능합니다.' });
+  })
   .post((req, res) => {
     if (req.body.channelTitle) {
       channelDB.set(channelIdx++, req.body);

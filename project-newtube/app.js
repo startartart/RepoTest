@@ -69,7 +69,16 @@ app
 app
   .route('/channels')
   .get((req, res) => {})
-  .post((req, res) => {});
+  .post((req, res) => {
+    if (req.body.channelTitle) {
+      channelDB.set(channelIdx++, req.body);
+      res.status(200).json({
+        message: `${
+          channelDB.get(channelIdx - 1).channelTitle
+        } 개설을 축하드립니다.`,
+      });
+    }
+  });
 
 app
   .route('/channels/:id')

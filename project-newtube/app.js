@@ -96,7 +96,28 @@ app
       });
     }
   })
-  .put((req, res) => {})
+  .put((req, res) => {
+    const channel = channelDB.get(parseInt(req.params.id));
+
+    if (channel) {
+      const preChannelTitle = channel.channelTitle;
+      if (req.body.channelTitle) {
+        channel.channelTitle = req.body.channelTitle;
+        channelDB.set(parseInt(req.params.id), channel);
+        res.json({
+          message: `채널명이 ${preChannelTitle}에서 ${req.body.channelTitle}로 정상적으로 수정되었습니다.`,
+        });
+      } else {
+        res
+          .status(400)
+          .json({ message: '올바르지 않거나 입력되지 않은 형식입니다.' });
+      }
+    } else {
+      res.status(404).json({
+        message: '존재하지 않는 채널입니다.',
+      });
+    }
+  })
   .delete((req, res) => {
     const channel = channelDB.get(parseInt(req.params.id));
     if (channel) {

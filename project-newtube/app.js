@@ -5,9 +5,22 @@ const port = 3001;
 const userDB = new Map();
 let userIdx = 1;
 
-app.post('/login', (req, res) => {});
-
 app.use(express.json());
+app.post('/login', (req, res) => {
+  const { userId, pwd } = req.body;
+  let checkUser = {};
+
+  userDB.forEach((user) => {
+    if (userId === user.userId) checkUser = user;
+  });
+
+  if (Object.keys(checkUser).length)
+    if (pwd === checkUser.pwd)
+      res.json({ message: `${checkUser.name}님, 로그인에 성공하셨습니다.` });
+    else res.status(401).json({ message: '올바르지 않은 비밀번호입니다.' });
+  else res.status(401).json({ message: '존재하지 않는 회원입니다.' });
+});
+
 app.post('/join', (req, res) => {
   if (!req.body.userId || !req.body.pwd || !req.body.name)
     res

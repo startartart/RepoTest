@@ -5,9 +5,18 @@ const port = 3001;
 const userDB = new Map();
 let userIdx = 1;
 
-app.post('/login', (req, res) => {});
-
 app.use(express.json());
+app.post('/login', (req, res) => {
+  const { userId, pwd } = req.body;
+  const checkUser = {};
+
+  userDB.forEach((user) => {
+    if (userId === user.userId && pwd === user.pwd) {
+      console.log('check');
+    }
+  });
+});
+
 app.post('/join', (req, res) => {
   if (!req.body.userId || !req.body.pwd || !req.body.name)
     res

@@ -77,12 +77,25 @@ app
           channelDB.get(channelIdx - 1).channelTitle
         } 개설을 축하드립니다.`,
       });
+    } else {
+      res
+        .status(400)
+        .json({ message: '올바르지 않거나 입력되지 않은 형식입니다.' });
     }
   });
 
 app
   .route('/channels/:id')
-  .get((req, res) => {})
+  .get((req, res) => {
+    const channel = channelDB.get(parseInt(req.params.id));
+    if (channel) {
+      res.status(200).json(channel);
+    } else {
+      res.status(404).json({
+        message: '존재하지 않는 채널입니다.',
+      });
+    }
+  })
   .put((req, res) => {})
   .delete((req, res) => {});
 

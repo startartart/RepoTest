@@ -3,7 +3,9 @@ const app = express();
 const port = 3001;
 
 const userDB = new Map();
+const channelDB = new Map();
 let userIdx = 1;
+let channelIdx = 1;
 
 app.use(express.json());
 app.post('/login', (req, res) => {
@@ -63,6 +65,17 @@ app
       });
     }
   });
+
+app
+  .route('/channels')
+  .get((req, res) => {})
+  .post((req, res) => {});
+
+app
+  .route('/channels/:id')
+  .get((req, res) => {})
+  .put((req, res) => {})
+  .delete((req, res) => {});
 
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);

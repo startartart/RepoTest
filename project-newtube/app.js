@@ -88,13 +88,11 @@ app
   .route('/channels/:id')
   .get((req, res) => {
     const channel = channelDB.get(parseInt(req.params.id));
-    if (channel) {
-      res.status(200).json(channel);
-    } else {
+    if (channel) res.status(200).json(channel);
+    else
       res.status(404).json({
         message: '존재하지 않는 채널입니다.',
       });
-    }
   })
   .put((req, res) => {
     const channel = channelDB.get(parseInt(req.params.id));
@@ -107,16 +105,14 @@ app
         res.json({
           message: `채널명이 ${preChannelTitle}에서 ${req.body.channelTitle}로 정상적으로 수정되었습니다.`,
         });
-      } else {
+      } else
         res
           .status(400)
           .json({ message: '올바르지 않거나 입력되지 않은 형식입니다.' });
-      }
-    } else {
+    } else
       res.status(404).json({
         message: '존재하지 않는 채널입니다.',
       });
-    }
   })
   .delete((req, res) => {
     const channel = channelDB.get(parseInt(req.params.id));
@@ -125,11 +121,10 @@ app
       res.status(200).json({
         message: `정상적으로 ${channel.channelTitle}(이)가 삭제되었습니다.`,
       });
-    } else {
+    } else
       res.status(404).json({
         message: '존재하지 않는 채널입니다.',
       });
-    }
   });
 
 app.listen(port, () => {

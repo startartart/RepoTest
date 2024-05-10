@@ -1,20 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
-const channelDB = new Map();
-let channelIdx = 1;
+const conn = require('../db');
 
 router.use(express.json());
-
-function needLogin(res) {
-  return res.status(404).json({ message: '로그인이 필요합니다.' });
-}
-
-function needLeastOneChannel(res) {
-  return res
-    .status(404)
-    .json({ message: '하나 이상의 채널이 있어야 조회가 가능합니다.' });
-}
 
 function notFoundChannel(res) {
   return res.status(404).json({
@@ -31,37 +19,39 @@ function unCorrectForm(res) {
 router
   .route('/')
   .get((req, res) => {
-    const { userId } = req.body;
-    const idToChannels = [];
+    const id = parseInt(req.body.userId);
+    const sql = `select * from channels where user_id = ${id}`;
 
-    if (channelDB.size && userId) {
-      channelDB.forEach((channel) => {
-        if (channel.userId === userId) return idToChannels.push(channel);
+    if (id)
+      conn.query(sql, (err, results) => {
+        if (results.length) res.status(200).json(results);
+        else notFoundChannel(res);
       });
-      if (idToChannels.length) res.status(200).json(idToChannels);
-      else needLeastOneChannel(res);
-    } else {
-      if (userId) needLeastOneChannel(res);
-      else needLogin(res);
-    }
+    else res.status(404);
   })
   .post((req, res) => {
-    if (req.body.channelTitle) {
-      channelDB.set(channelIdx++, req.body);
-      res.status(200).json({
-        message: `${
-          channelDB.get(channelIdx - 1).channelTitle
-        } 개설을 축하드립니다.`,
+    const { title, userId } = req.body;
+    const sql = `insert into channels (title, user_id) values '${title}', ${parseInt(
+      userId
+    )}`;
+
+    if (title && userId)
+      conn.query(sql, (err, results) => {
+        res.status(201).json(results);
       });
-    } else unCorrectForm(res);
+    else unCorrectForm(res);
   });
 
 router
   .route('/:id')
   .get((req, res) => {
-    const channel = channelDB.get(parseInt(req.params.id));
-    if (channel) res.status(200).json(channel);
-    else notFoundChannel(res);
+    const id = parseInt(req.params.id);
+    const sql = `select * from channels where id = ${id}`;
+
+    conn.query(sql, (err, results) => {
+      if (results.length) res.status(200).json(results);
+      else notFoundChannel(res);
+    });
   })
   .put((req, res) => {
     const channel = channelDB.get(parseInt(req.params.id));

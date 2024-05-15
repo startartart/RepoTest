@@ -2,6 +2,7 @@
 
 - [회원 API 설계](https://github.com/startartart/RepoTest/pull/8)
 - [채널 API 설계](https://github.com/startartart/RepoTest/pull/11)
+- [JWT token](https://github.com/startartart/RepoTest/pull/16)
 
 ---
 ### 뉴튜브 API 설계하기 연습 `'./project-demo-example'`

@@ -1,11 +1,19 @@
-const conn = require('../db');
+const mariadb = require('mysql2/promise');
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const order = (req, res) => {
+const order = async (req, res) => {
+  const conn = await mariadb.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'Bookshop',
+    dateStrings: true,
+  });
+
   const {
     items,
     delivery,
@@ -14,52 +22,31 @@ const order = (req, res) => {
     user_id,
     first_book_title,
   } = req.body;
+
   const sql = `insert into delivery (address, receiver, contact) values (?, ?, ?)`;
   const values = [delivery.address, delivery.receiver, delivery.contact];
-  const delivery_id = 3;
-  const order_id = 2;
+  const [query1Results] = await conn.query(sql, values);
+  const delivery_id = query1Results.insertId;
 
-    // conn.query(sql, values, (err, results) => {
-    //   if (err) return res.status(StatusCodes.BAD_REQUEST).end();
+  const sql2 = `insert into orders (book_title, total_quantity, total_price, user_id, delivery_id)
+                values (?, ?, ?, ?, ?)`;
+  const values2 = [
+    first_book_title,
+    total_quantity,
+    total_price,
+    user_id,
+    delivery_id,
+  ];
 
-    //   const delivery_id = results.insertId;
-
-    //   if (results) return res.status(StatusCodes.CREATED).json(results);
-    //   return res.status(StatusCodes.NOT_FOUND).end();
-    // });
-
-//   const sql2 = `insert into orders (book_title, total_quantity, total_price, user_id, delivery_id)
-//                 values (?, ?, ?, ?, ?)`;
-//   const values2 = [
-//     first_book_title,
-//     total_quantity,
-//     total_price,
-//     user_id,
-//     delivery_id,
-//   ];
-
-//     conn.query(sql2, values2, (err, results) => {
-//       if (err) return res.status(StatusCodes.BAD_REQUEST).end();
-
-//       const order_id = results.insertId;
-
-//       if (results) return res.status(StatusCodes.CREATED).json(results);
-//       return res.status(StatusCodes.NOT_FOUND).end();
-//     });
+  const [query2Results] = await conn.query(sql2, values2);
+  const order_id = query2Results.insertId;
 
   const sql3 = `insert into orderedBook (order_id, book_id, quantity) values ?`;
-  let values3 = [];
+  const values3 = items.map((item) => [order_id, item.book_id, item.quantity]);
 
-  items.forEach((item) => {
-    values3.push([order_id, item.book_id, item.quantity]);
-  });
-
-  conn.query(sql3, [values3], (err, results) => {
-    if (err) return res.status(StatusCodes.BAD_REQUEST).end();
-
-    if (results) return res.status(StatusCodes.CREATED).json(results);
-    return res.status(StatusCodes.NOT_FOUND).end();
-  });
+  
+  const [query3Results] = await conn.query(sql3, [values3]);
+  res.send(query3Results);
 };
 
 const getOrders = (req, res) => {};

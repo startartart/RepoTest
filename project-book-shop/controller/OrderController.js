@@ -63,7 +63,22 @@ const deleteCartItems = async (conn, items) => {
   return await conn.query(sql, [items]);
 };
 
-const getOrders = (req, res) => {};
+const getOrders = async (req, res) => {
+  const conn = await mariadb.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'Bookshop',
+    dateStrings: true,
+  });
+
+  const sql = `select orders.id, created_at, address, receiver, contact, book_title, 
+                total_quantity, total_price from orders left join delivery
+                on orders.delivery_id = delivery.id`;
+  const [rows, fields] = await conn.query(sql);
+
+  return res.status(StatusCodes.OK).json(rows);
+};
 
 const getOrderDetail = (req, res) => {};
 

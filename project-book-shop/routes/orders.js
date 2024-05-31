@@ -10,8 +10,8 @@ router.use(express.json());
 
 router.post('/', order);
 
-router.post('/', getOrders);
+router.get('/', getOrders);
 
-router.post('/:id', getOrderDetail);
+router.get('/:id', getOrderDetail);
 
 module.exports = router;

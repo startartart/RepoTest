@@ -6,10 +6,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const allBooks = (req, res) => {
+  let all_books_res = {};
   const { category_id, news, limit, current_page } = req.query;
 
   const offset = limit * (current_page - 1);
-  let sql = `select *, (select count(*)
+  let sql = `select SQL_CALC_FOUND_ROWS *, (select count(*)
             from likes where liked_book_id = books.id)
             as likes from books `;
   let values = [];
@@ -28,9 +29,21 @@ const allBooks = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) return res.status(StatusCodes.BAD_REQUEST).end();
+    if (results.length) all_books_res.books = results;
+    else return res.status(StatusCodes.NOT_FOUND).end();
+  });
 
-    if (results.length) return res.status(StatusCodes.CREATED).json(results);
-    return res.status(StatusCodes.NOT_FOUND).end();
+  sql = `select found_rows()`;
+  conn.query(sql, (err, results) => {
+    if (err) return res.status(StatusCodes.BAD_REQUEST).end();
+
+    const pagination = {};
+    pagination.current_page = current_page;
+    pagination.total_count = results[0]['found_rows()'];
+
+    all_books_res.pagination = pagination;
+
+    return res.status(StatusCodes.CREATED).json(all_books_res);
   });
 };
 

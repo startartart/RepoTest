@@ -1,7 +1,7 @@
 const conn = require('../db');
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+const ensureAuthorization = require('../utils/auth');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -35,14 +35,37 @@ const allBooks = (req, res) => {
 };
 
 const bookDetail = (req, res) => {
-  const { user_id } = req.body;
+  const id = ensureAuthorization(req);
+  if (id instanceof jwt.TokenExpiredError)
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: '로그인 세션이 만료되었습니다. 다시 로그인 하세요.',
+    });
+  else if (id instanceof jwt.JsonWebTokenError)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: '잘못된 토큰입니다.',
+    });
+  else if (id instanceof ReferenceError) {
+    const book_id = req.params.id;
+    const sql = `select *,
+                (select count(*) from likes where liked_book_id = books.id) as likes,
+              from books left join category
+              on books.category_id = category.category_id where books.id = ?`;
+    const values = [book_id];
+    conn.query(sql, values, (err, results) => {
+      if (err) return res.status(StatusCodes.BAD_REQUEST).end();
+
+      if (results[0]) return res.status(StatusCodes.CREATED).json(results[0]);
+      return res.status(StatusCodes.NOT_FOUND).end();
+    });
+  }
+
   const book_id = req.params.id;
   const sql = `select *,
                 (select count(*) from likes where liked_book_id = books.id) as likes,
                 (select exists (select * from likes where user_id = ? and liked_book_id = ?)) as liked
               from books left join category
               on books.category_id = category.category_id where books.id = ?`;
-  const values = [user_id, book_id, book_id];
+  const values = [id, book_id, book_id];
   conn.query(sql, values, (err, results) => {
     if (err) return res.status(StatusCodes.BAD_REQUEST).end();
 

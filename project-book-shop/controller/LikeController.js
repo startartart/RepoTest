@@ -1,10 +1,7 @@
 const conn = require('../db');
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const dotenv = require('dotenv');
-const ensureAuthorization = require('../utils/ensureAuthorization');
-dotenv.config();
+const ensureAuthorization = require('../utils/auth');
 
 const addLike = (req, res) => {
   const book_id = req.params.id;
@@ -17,6 +14,11 @@ const addLike = (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: '잘못된 토큰입니다.',
     });
+  else if (id instanceof ReferenceError) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: '잘못된 접근입니다.',
+    });
+  }
 
   const sql = `insert into likes (user_id, liked_book_id) values (?, ?)`;
   const values = [id, book_id];
@@ -39,6 +41,11 @@ const removeLike = (req, res) => {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: '잘못된 토큰입니다.',
     });
+  else if (id instanceof ReferenceError) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: '잘못된 접근입니다.',
+    });
+  }
 
   const sql = `delete from likes where user_id = ? and liked_book_id = ?`;
   const values = [id, book_id];

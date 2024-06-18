@@ -26,5 +26,5 @@ class Employee {
 }
 
 let employee1 = new Employee('park', 26, '개발자');
-employee1.empName = 'gwo';
+employee1.empName = 'gwon';
 employee1.printEmp();

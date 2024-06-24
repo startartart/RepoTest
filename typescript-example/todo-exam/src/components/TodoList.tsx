@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TodoModal from './TodoModal';
 
 type TodoProps = {
   id: number;
@@ -81,6 +82,11 @@ export default function TodoList() {
           })}
         </ul>
       </div>
+      <TodoModal
+        show={showModal}
+        todo={selectedTodo}
+        handleClose={handleCloseModal}
+      />
     </>
   );
 }

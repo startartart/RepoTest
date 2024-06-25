@@ -5,7 +5,7 @@ export const vars = createGlobalTheme(':root', {
     main: '#ffa726',
     mainDarker: '#f57c00',
     mainFaded: '#ffb74d',
-    mainFadedBright: '#ffb74d',
+    mainFadedBright: '#ffcb80',
     list: 'rgb(235,236,240)',
     task: 'rgb(255,255,255)',
     taskHover: 'rgb(245,245,245)',
@@ -23,6 +23,7 @@ export const vars = createGlobalTheme(':root', {
     T3: '18px',
     T4: '14px',
     T5: '12px',
+    P1: '14px',
   },
   spacing: {
     small: '5px',

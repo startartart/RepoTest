@@ -17,7 +17,7 @@ export default function ListsContainer({
       {lists.map((list) => (
         <List key={list.listId} list={list} boardId={boardId} />
       ))}
-      <ActionButton boardId={boardId} listId={""} list />
+      <ActionButton boardId={boardId} listId={''} list />
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default function ActionButton({
   listId,
   list,
 }: TActionButtonProps) {
-  const [isFormOpen, setIsFormOpen] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const buttonText = list ? `새로운 리스트 등록` : `새로운 일 등록`;
 
   return isFormOpen ? (

@@ -20,7 +20,12 @@ type TDropDownFormProps = {
   listId: string;
   boardId: string;
 };
-export default function DropDownForm({ setIsFormOpen, list, boardId, listId }) {
+export default function DropDownForm({
+  setIsFormOpen,
+  list,
+  boardId,
+  listId,
+}: TDropDownFormProps) {
   const dispatch = useTypedDispatch();
   const [text, setText] = useState('');
   const formPlaceholder = list

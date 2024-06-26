@@ -19,7 +19,7 @@ const initialState: TModalState = {
     taskId: 'task-0',
     taskName: 'task 0',
     taskDescription: 'task description',
-    taskOwner: 'ParkByungGwon',
+    taskOwner: 'Park',
   },
 };
 const modalSlice = createSlice({

@@ -26,36 +26,6 @@ export default function EditModal() {
     dispatch(setModalActive(false));
   };
 
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({
-      ...data,
-      task: {
-        ...data.task,
-        taskName: e.target.value,
-      },
-    });
-  };
-
-  const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({
-      ...data,
-      task: {
-        ...data.task,
-        taskDescription: e.target.value,
-      },
-    });
-  };
-
-  const handleAuthorChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({
-      ...data,
-      task: {
-        ...data.task,
-        taskOwner: e.target.value,
-      },
-    });
-  };
-
   const handleUpdate = () => {
     dispatch(
       updateTask({
@@ -94,6 +64,19 @@ export default function EditModal() {
     dispatch(setModalActive(false));
   };
 
+  const handleInputChange = (
+    field: string,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    setData({
+      ...data,
+      task: {
+        ...data.task,
+        [field]: e.target.value,
+      },
+    });
+  };
+
   return (
     <div className={wrapper}>
       <div className={modalWindow}>
@@ -106,21 +89,21 @@ export default function EditModal() {
           className={input}
           type="text"
           value={data.task.taskName}
-          onChange={handleNameChange}
+          onChange={(e) => handleInputChange('taskName', e)}
         />
         <div className={title}>설명</div>
         <input
           className={input}
           type="text"
           value={data.task.taskDescription}
-          onChange={handleDescriptionChange}
+          onChange={(e) => handleInputChange('taskDescription', e)}
         />
         <div className={title}>생성한 사람</div>
         <input
           className={input}
           type="text"
           value={data.task.taskOwner}
-          onChange={handleAuthorChange}
+          onChange={(e) => handleInputChange('taskOwner', e)}
         />
         <div className={buttons}>
           <button className={updateButton} onClick={handleUpdate}>

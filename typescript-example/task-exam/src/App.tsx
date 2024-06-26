@@ -59,8 +59,8 @@ export default function App() {
 
   return (
     <div className={appContainer}>
-      {isLoggerOpen ? <LoggerModal setIsLoggerOpen={setIsLoggerOpen} /> : null}
-      {modalActive ? <EditModal /> : null}
+      {isLoggerOpen && <LoggerModal setIsLoggerOpen={setIsLoggerOpen} />}
+      {modalActive && <EditModal />}
       <BoardList
         activeBoardId={activeBoardId}
         setActiveBoardId={setActiveBoardId}

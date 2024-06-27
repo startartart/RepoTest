@@ -64,9 +64,7 @@ export default function List({ list, boardId }: TListProps) {
           </div>
           {list.tasks.map((task, index) => (
             <div
-              onClick={() =>
-                handleTaskChange(boardId, list.listId, task.taskId, task)
-              }
+              onClick={() => handleTaskChange(boardId, list.listId, task)}
               key={task.taskId}
             >
               <Task

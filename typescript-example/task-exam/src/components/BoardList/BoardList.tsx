@@ -9,7 +9,6 @@ import {
   boardItem,
   boardItemActive,
   addSection,
-  smallTitle,
 } from './BoardList.css';
 import { clsx } from 'clsx';
 import { GoSignOut } from 'react-icons/go';

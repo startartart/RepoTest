@@ -12,7 +12,6 @@ export default function Task({
   index,
   taskName,
   taskDescription,
-  boardId,
   id,
 }: TTaskProps) {
   return (

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./directory_you_want_to_run_step
+        working-directory: ./typescript-example/task-exam
     steps:
       - uses: actions/checkout@v4
       - run: npm install && npm run build
